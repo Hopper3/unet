@@ -1,0 +1,36 @@
+import shutil
+import os
+import glob
+import gzip
+
+def compress_nii_to_gz(input_file):
+    output_file = input_file + '.gz'
+    with open(input_file, 'rb') as f_in, gzip.open(output_file, 'wb') as f_out:
+        shutil.copyfileobj(f_in, f_out)
+
+# file path
+input_paths = [
+    os.path.expanduser('/media/wanglab2/DATA/Hopper/AD_QSM/AD_2m'),
+    os.path.expanduser('/media/wanglab2/DATA/Hopper/AD_QSM/AD_4m'),
+    os.path.expanduser('/media/wanglab2/DATA/Hopper/AD_QSM/AD_7m'),
+    os.path.expanduser('/media/wanglab2/DATA/Hopper/AD_QSM/AD_12m')
+]
+
+image = 0
+mask = 0
+for input_path in input_paths:
+    # base on image name
+    # mag_files = glob.glob(os.path.join(input_path, '**', 'mag_wop1.nii'), recursive=True)
+    mag_files = glob.glob(os.path.join(input_path, '**', 'mag_sos_wn.nii'), recursive=True)
+    mask_files = glob.glob(os.path.join(input_path, '**', 'mask_wop1.nii'), recursive=True)
+
+    for mag_file in mag_files:
+        compress_nii_to_gz(mag_file)
+        image += 1
+
+    for mask_file in mask_files:
+        compress_nii_to_gz(mask_file)
+        mask += 1
+
+print(f'Total files compressed: image:{image} + mask:{mask}')
+
