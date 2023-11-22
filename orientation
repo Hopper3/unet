@@ -1,0 +1,24 @@
+import SimpleITK as sitk
+import numpy as np
+#%%
+def change_orientation(image, new_orientation):
+    # 计算新的方向
+    # 对于 ARI 方向，方向矩阵可能是 [1,0,0, 0,1,0, 0,0,1]，这取决于原始方向
+    # 你可能需要根据原始图像的方向进行调整
+    new_direction = [0,1,0, 1,0,0, 0,0,1]  
+
+    # 设置新的方向
+    image.SetDirection(new_direction)
+    return image
+#%%
+# 读取图像
+image_path = 'D:/patient_4_0000.nii.gz'
+image = sitk.ReadImage(image_path)
+
+# 更改方向
+new_orientation = 'ARI'  # Anterior-Right-Inferior
+image_with_new_orientation = change_orientation(image, new_orientation)
+
+# 保存修改后的图像
+new_image_path = 'D:/test/patient_4_0000.nii.gz'
+sitk.WriteImage(image_with_new_orientation, new_image_path)
